@@ -1,0 +1,92 @@
+%% Sleep Analysis
+clc; clear all
+% % Move matrix files -  extract matrix connectivity .mat file and put it into its own folder
+comp = 'u0127719';
+% comp = 'simontitone';
+homedir = ['/Users/' comp '/Google_Drive/PhD/MMASS/Analysis/study2'];
+sourcepath = '/Volumes/Backup2/Analysis/study2/NET/'; reg = 'study2_NET'; badcap = 'study2_NET_badcap';
+newpath_reg = [homedir '/matrix_conn_reg']; newpath_badcap = [homedir '/matrix_conn_badcap'];
+newpath_prelim = [homedir '/preliminary'];
+matrix = '/eeg_source/seed_connectivity/matrix_connectivity.mat';
+FT_roi = '/eeg_source/seed_connectivity/FT_roi.mat';
+
+nds = 159; nds_badcap = 43; nds_prelim = 159; 
+
+
+%% Create dataset directories in new matrix_conn folder
+if ~exist(newpath_reg); mkdir(newpath_reg); end; cd(newpath_reg)
+for i=1:nds
+    ds = ['dataset' num2str(i)];
+    if ~exist(ds); mkdir(ds); end
+end
+clear ds;
+
+%% Copy individual matrix connectivity files & power spectra data (FT_roi) files to new folder
+for i=1:nds
+    a= [sourcepath reg filesep 'dataset' num2str(i) matrix];
+    aft = [sourcepath reg filesep 'dataset' num2str(i) FT_roi];
+    a_bc = [ sourcepath reg filesep 'dataset' num2str(i) filesep '/eeg_signal/processed_eeg_badchannel.mat'];
+    b= [newpath_reg filesep 'dataset' num2str(i)];
+
+    %     if exist(a)
+    %         copyfile(a, b)
+    %     end
+    if exist(a_bc)
+        copyfile(a_bc, b)
+    end
+    %     if exist(aft)
+    %         copyfile(aft, b)
+    %     end
+end
+% clear a; clear b; clear aft;
+%% Rename dataset directories. regular dataset- not including NREM2 cycles 1 & 2
+newname = {'P1_NREM2_c3'	,'P1_NREM2_c4'	,'P1_NREM3_c1'	,'P1_NREM3_c2'	,'P1_NREM3_c3'	,'P1_REM_c1'	,'P1_REM_c2'	,'P1_REM_c4'	,'P2_NREM2_c3'	,'P2_NREM3_c1'	,'P2_NREM3_c2'	,'P2_REM_c1'	,'P2_REM_c2'	,'P3_NREM2_c3'	,'P3_NREM2_c4'	,'P3_NREM3_c1'	,'P3_NREM3_c2'	,'P3_REM_c2'	,'P3_REM_c3'	,'P3_REM_c4'	,'P5_NREM2_c3'	,'P5_NREM2_c4'	,'P5_NREM3_c1'	,'P5_NREM3_c2'	,'P5_REM_c1'	,'P5_REM_c2'	,'P5_REM_c3'	,'P5_REM_c4'	,'P7_NREM2_c3'	,'P7_NREM2_c4'	,'P7_NREM3_c1'	,'P7_NREM3_c2'	,'P7_REM_c1'	,'P7_REM_c2'	,'P7_REM_c3'	,'P7_REM_c4'	,'P8_NREM2_c3'	,'P8_NREM3_c1'	,'P8_NREM3_c2'	,'P8_NREM3_c3'	,'P8_REM_c1'	,'P8_REM_c2'	,'P10_NREM2_c3'	,'P10_NREM2_c4'	,'P10_NREM3_c1'	,'P10_NREM3_c2'	,'P10_NREM3_c3'	,'P10_REM_c2'	,'P12_NREM2_c3'	,'P12_NREM3_c1'	,'P12_NREM3_c3'	,'P12_NREM3_c4'	,'P12_REM_c2'	,'P12_REM_c3'	,'P18_NREM2_c3'	,'P18_NREM2_c4'	,'P18_NREM3_c1'	,'P18_NREM3_c2'	,'P18_NREM3_c3'	,'P18_NREM3_c4'	,'P18_REM_c1'	,'P18_REM_c3'	,'P19_NREM2_c3'	,'P19_NREM2_c4'	,'P19_NREM3_c1'	,'P19_NREM3_c2'	,'P19_REM_c1'	,'P19_REM_c2'	,'P19_REM_c3'	,'P19_REM_c4'	,'P20_NREM2_c3'	,'P20_NREM2_c4'	,'P20_NREM3_c1'	,'P20_NREM3_c2'	,'P20_NREM3_c3'	,'P20_REM_c1'	,'P20_REM_c2'	,'P20_REM_c3'	,'P20_REM_c4'	,'P21_NREM2_c3'	,'P21_NREM2_c4'	,'P21_NREM3_c1'	,'P21_NREM3_c2'	,'P21_NREM3_c3'	,'P21_NREM3_c4'	,'P21_REM_c1'	,'P21_REM_c2'	,'P21_REM_c3'	,'P21_REM_c4'	,'P22_NREM2_c3'	,'P22_NREM2_c4'	,'P22_NREM3_c1'	,'P22_NREM3_c2'	,'P22_NREM3_c3'	,'P22_NREM3_c4'	,'P22_REM_c1'	,'P22_REM_c2'	,'P22_REM_c3'	,'P22_REM_c4'	,'P23_NREM2_c3'	,'P23_NREM2_c4'	,'P23_NREM3_c1'	,'P23_NREM3_c2'	,'P23_NREM3_c3'	,'P23_NREM3_c4'	,'P23_REM_c1'	,'P23_REM_c2'	,'P23_REM_c3'	,'P23_REM_c4'	,'P24_NREM2_c3'	,'P24_NREM2_c4'	,'P24_NREM3_c1'	,'P24_NREM3_c3'	,'P24_NREM3_c4'	,'P24_REM_c1'	,'P24_REM_c2'	,'P24_REM_c3'	,'P24_REM_c4'	,'P25_NREM2_c3'	,'P25_NREM2_c4'	,'P25_NREM3_c1'	,'P25_NREM3_c2'	,'P25_NREM3_c3'	,'P25_REM_c1'	,'P25_REM_c2'	,'P25_REM_c3'	,'P25_REM_c4'	,'P26_NREM2_c3'	,'P26_NREM2_c4'	,'P26_NREM3_c1'	,'P26_NREM3_c2'	,'P26_NREM3_c3'	,'P26_REM_c1'	,'P26_REM_c2'	,'P26_REM_c3'	,'P26_REM_c4'	,'P27_NREM2_c3'	,'P27_NREM2_c4'	,'P27_NREM3_c1'	,'P27_NREM3_c2'	,'P27_NREM3_c3'	,'P27_REM_c1'	,'P27_REM_c2'	,'P27_REM_c3'	,'P27_REM_c4'	,'P28_NREM2_c3'	,'P28_NREM2_c4'	,'P28_NREM3_c2'	,'P28_NREM3_c4'	,'P28_REM_c3'	,'P28_REM_c4'	,'P29_NREM2_c3'	,'P29_NREM2_c4'	,'P29_NREM3_c1'	,'P29_NREM3_c2'	,'P29_NREM3_c3'	,'P29_REM_c1'	,'P29_REM_c2'	,'P29_REM_c3'};
+for i = 1:nds
+    dts{i} = ['dataset' num2str(i)];
+end
+
+for i=1:length(dts)
+    old=fullfile(([newpath_reg filesep dts{i}]));
+    new=fullfile([newpath_reg filesep newname{i}]);
+    movefile(old, new);
+end
+
+%%%%%%%%%%%% "Badcap" dataset
+%% Create dataset directories in new matrix_conn folder
+% if ~exist(newpath_badcap); mkdir(newpath_badcap); end; cd(newpath_badcap)
+% for i=1:nds_badcap
+%     ds = ['dataset' num2str(i)];
+%     if ~exist(ds); mkdir(ds); end
+% end
+% 
+% %% Copy individual matrix connectivity files & power spectra data (FT_roi) files to new folder
+% for i=1:nds_badcap
+%     a= [sourcepath badcap filesep 'dataset' num2str(i) matrix];
+%     aft = [sourcepath badcap filesep 'dataset' num2str(i) FT_roi];
+%     a_bc = [ sourcepath badcap filesep 'dataset' num2str(i) filesep 'eeg_signal/processed_eeg_badchannel.mat'];
+% 
+%     bb= [newpath_badcap filesep 'dataset' num2str(i)];
+% % 
+%     if exist(a_bc)
+%         copyfile(a_bc, bb)
+%     end
+% %     if exist(a)
+% %         copyfile(a, bb)
+% %     end
+% %     if exist(aft)
+% %         copyfile(aft, bb)
+% %     end
+% end
+% clear a; clear b; clear aft;
+% 
+% %% Rename dataset directories
+% newname_badcap = {'P4_NREM2_c3'	,'P4_NREM3_c1'	,'P4_NREM3_c2'	,'P4_NREM3_c3'	,'P6_NREM2_c3'	,'P6_NREM2_c4'	,'P6_NREM3_c1'	,'P6_NREM3_c2'	,'P6_NREM3_c3'	,'P6_REM_c2'	,'P6_REM_c3'	,'P11_NREM2_c3'	,'P11_NREM2_c4'	,'P11_NREM3_c1'	,'P11_NREM3_c2'	,'P11_NREM3_c4'	,'P11_REM_c2'	,'P11_REM_c3'	,'P11_REM_c4'	,'P13_NREM2_c3'	,'P13_NREM3_c1'	,'P13_NREM3_c2'	,'P13_REM_c1'	,'P13_REM_c2'	,'P13_REM_c3'	,'P15_NREM2_c3'	,'P15_NREM2_c4'	,'P15_NREM3_c1'	,'P15_NREM3_c2'	,'P15_REM_c1'	,'P15_REM_c2'	,'P15_REM_c3'	,'P15_REM_c4'	,'P16_NREM2_c3'	,'P16_NREM2_c4'	,'P16_NREM3_c1'	,'P16_NREM3_c2'	,'P16_NREM3_c3'	,'P16_NREM3_c4'	,'P16_REM_c1'	,'P16_REM_c2'	,'P16_REM_c3'	,'P16_REM_c4'};
+% for i = 1:nds_badcap
+%     dts_badcap{i} = ['dataset' num2str(i)];
+% end
+% 
+% for i=1:nds_badcap
+%     old=fullfile(([newpath_badcap filesep dts_badcap{i}]));
+%     new=fullfile([newpath_badcap filesep newname_badcap{i}]);
+%     movefile(old, new);
+% end
